@@ -8,7 +8,7 @@ export class Collision {
     }
 
     draw(c) {
-        c.fillStyle = 'red';
+        c.fillStyle = 'rgba(255, 0, 0, 0.2)';
         c.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 }

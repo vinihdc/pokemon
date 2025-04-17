@@ -10,7 +10,7 @@ canvas.height = 576;
 
 const offset = {
     x: -1600,
-    y: -1160
+    y: -1200
 };
 
 const collisionsMap = [];
@@ -33,6 +33,9 @@ collisionsMap.forEach((row, i) => {
 const image = new Image();
 image.src = '../assets/img/map/mapa.png';
 
+const foregroundImage = new Image();
+foregroundImage.src = '../assets/img/map/mapaForeground.png';
+
 const playerImage = new Image();
 playerImage.src = '../assets/img/player/playerDown.png';
 
@@ -45,6 +48,11 @@ image.onload = () => {
 };
 playerImage.onload = () => {
     playerImage.isReady = true;
+    imagesLoaded++;
+    checkAllImagesLoaded();
+};
+foregroundImage.onload = () => {
+    foregroundImage.isReady = true;
     imagesLoaded++;
     checkAllImagesLoaded();
 };
@@ -74,12 +82,15 @@ const player = new Sprite({
     }
 });
 
-const testecollision = new Collision({
-    x: 400,
-    y: 300
+const foreground = new Sprite({
+    position: {
+        x: offset.x,
+        y: offset.y,
+    },
+    image: foregroundImage,
 });
 
-const movables = [background, ...collisions];
+const movables = [background, ...collisions, foreground];
 
 function rectangularCollision(rect1, rect2) {
     return (
@@ -93,12 +104,11 @@ function rectangularCollision(rect1, rect2) {
 function animate() {
     window.requestAnimationFrame(animate);
     background.draw(c);
-
-    collisions.forEach((collission) => {
-        collission.draw(c);
+    collisions.forEach((collision) => {
+        collision.draw(c);
     });
-
     player.draw(c);
+    foreground.draw(c);
 
     if (keys.w || keys.arrowup) {
         let moving = true;
@@ -111,7 +121,7 @@ function animate() {
                         ...collision,
                         position: {
                             x: collision.position.x,
-                            y: collision.position.y - 40
+                            y: collision.position.y + 2.8
                         }
                     }
                 )
@@ -129,7 +139,6 @@ function animate() {
     }
 
     else if (keys.s || keys.arrowdown) {
-        let moving = true;
         for (let i = 0; i < collisions.length; i++) {
             const collision = collisions[i];
             if (
@@ -139,7 +148,7 @@ function animate() {
                         ...collision,
                         position: {
                             x: collision.position.x,
-                            y: collision.position.y - 40
+                            y: collision.position.y - 2.8
                         }
                     }
                 )
@@ -148,12 +157,9 @@ function animate() {
                 break;
             }
         }
-
-        if (moving) {
-            movables.forEach((movable) => {
-                movable.position.y -= 2.8;
-            });
-        }
+        movables.forEach((movable) => {
+            movable.position.y -= 2.8;
+        });
     }
 
     else if (keys.a || keys.arrowleft) {
@@ -166,8 +172,8 @@ function animate() {
                     {
                         ...collision,
                         position: {
-                            x: collision.position.x,
-                            y: collision.position.y - 40
+                            x: collision.position.x + 2.8,
+                            y: collision.position.y
                         }
                     }
                 )
@@ -193,8 +199,8 @@ function animate() {
                     {
                         ...collision,
                         position: {
-                            x: collision.position.x,
-                            y: collision.position.y - 40
+                            x: collision.position.x - 2.8,
+                            y: collision.position.y
                         }
                     }
                 )
@@ -210,7 +216,6 @@ function animate() {
         }
     }
 }
-
 const keys = {
     arrowup: false,
     arrowdown: false,
@@ -226,8 +231,6 @@ document.addEventListener('keydown', (e) => {
     const key = e.key.toLowerCase();
     if (key in keys) keys[key] = true;
 });
-
-
 document.addEventListener('keyup', (e) => {
     const key = e.key.toLowerCase();
     if (key in keys) keys[key] = false;
