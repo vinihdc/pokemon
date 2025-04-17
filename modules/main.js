@@ -65,6 +65,15 @@ playerLeftImage.src = '../assets/img/player/playerLeft.png';
 const playerRightImage = new Image();
 playerRightImage.src = '../assets/img/player/playerRight.png';
 
+const battleBackgroundImage = new Image();
+battleBackgroundImage.src = '../assets/img/map/battleBackground.png';
+
+const pokemonLucasImage = new Image();
+pokemonLucasImage.src = '../assets/img/pokemon/lucas.png';
+
+const pokemonTraksImage = new Image();
+pokemonTraksImage.src = '../assets/img/pokemon/traks.png';
+
 let imagesLoaded = 0;
 
 image.onload = () => {
@@ -86,7 +95,7 @@ foregroundImage.onload = () => {
 
 function checkAllImagesLoaded() {
     if (imagesLoaded === 3 && image.isReady && playerDownImage.isReady && foregroundImage.isReady) {
-        animate();
+        animateBattle();
     }
 }
 
@@ -123,6 +132,28 @@ const foreground = new Sprite({
     image: foregroundImage,
 });
 
+const battleBackground = new Sprite({
+    position: {
+        x: 0,
+        y: 0
+    },
+    image: battleBackgroundImage
+});
+
+const pokemonLucas = new Sprite({
+    position: { x: 750, y: 40 },
+    image: pokemonLucasImage,
+    width: 150, 
+    height: 150 
+});
+
+const pokemonTraks = new Sprite({
+    position: { x: 220, y: 100 },
+    image: pokemonTraksImage,
+    width: 250, 
+    height: 300 
+});
+
 const movables = [background, ...collisions, foreground, ...battleZones];
 
 function rectangularCollision(rect1, rect2) {
@@ -137,7 +168,7 @@ function rectangularCollision(rect1, rect2) {
 const battle = {}
 
 function animate() {
-    window.requestAnimationFrame(animate);
+    const animationId = window.requestAnimationFrame(animate);
 
     background.draw(c);
     battleZones.forEach((battleZone) => {
@@ -166,8 +197,29 @@ function animate() {
                 overlappingArea > (player.width * player.height) / 2 &&
                 Math.random() < 0.1
             ) {
-                console.log('Entrou em zona de batalha!');
+                window.cancelAnimationFrame(animationId);
+
                 battleZone.initiated = true;
+
+                gsap.to('#overlapping-div', {
+                    opacity: 1,
+                    duration: 0.4,
+                    onComplete: () => {
+                        gsap.to('#overlapping-div', {
+                            opacity: 0,
+                            duration: 0.4,
+                            repeat: 4,
+                            yoyo: true,
+                            onComplete: () => {
+                                animateBattle();
+                                gsap.to('#overlapping-div', {
+                                    opacity: 1,
+                                    duration: 0.4
+                                });
+                            }
+                        });
+                    }
+                });
                 break;
             }
         }
@@ -291,6 +343,15 @@ function animate() {
         }
     }
 }
+
+
+function animateBattle() {
+    window.requestAnimationFrame(animateBattle);
+    battleBackground.draw(c);
+    pokemonTraks.draw(c);
+    pokemonLucas.draw(c);
+}
+
 const keys = {
     arrowup: false,
     arrowdown: false,
