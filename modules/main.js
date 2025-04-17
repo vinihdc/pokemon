@@ -95,7 +95,7 @@ foregroundImage.onload = () => {
 
 function checkAllImagesLoaded() {
     if (imagesLoaded === 3 && image.isReady && playerDownImage.isReady && foregroundImage.isReady) {
-        animateBattle();
+        animate();
     }
 }
 
