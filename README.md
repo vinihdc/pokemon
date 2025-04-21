@@ -79,9 +79,9 @@ Este projeto está licenciado sob a **MIT License** - veja o arquivo [LICENSE](L
 
 ## **Contato**
 
-- **Desenvolvedor**: Suguru Assassino
-- **GitHub**: [https://github.com/seu-usuario](https://github.com/seu-usuario)
-- **Email**: seuemail@dominio.com
+- **Desenvolvedor**: Vinicius Soares
+- **GitHub**: [https://github.com/vinihdc](https://github.com/vinihdc)
+- **Email**: vinispmm@hotmail.com
 
 ---
 
